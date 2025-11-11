@@ -26,18 +26,32 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const db = client.db('pawmart-assignment');
-    const listingCollection = db.collection('listing')
+    const db = client.db("pawmart-assignment");
+    const listingCollection = db.collection("listing");
 
-    app.get('/allListing', async (req,res) => {
-        const cursor = await listingCollection.find().toArray();
-        res.send(result);
-    })
+    // get all listing
+    app.get("/allListing", async (req, res) => {
+      const cursor = await listingCollection.find().toArray();
+      res.send(cursor);
+    });
 
-    app.get('/latestList', async (req,res) => {
-        const result = await listingCollection.find().limit(6).toArray();
-        res.send(result);
-    })
+    // get 6 latest list
+    app.get("/latestList", async (req, res) => {
+      const result = await listingCollection
+        .find()
+        .sort({ date: -1 })
+        .limit(6)
+        .toArray();
+      res.send(result);
+    });
+
+    // create a new listing
+    app.post("/allListing", async (req, res) => {
+      const data = req.body;
+      console.log(data);
+      const result = await listingCollection.insertOne(data);
+      res.send(result)
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
@@ -45,7 +59,8 @@ async function run() {
     );
   } finally {
   }
-}run().catch(console.dir)
+}
+run().catch(console.dir);
 
 app.listen(port, () => {
   console.log(`pawmart assignment server running port: ${port}`);
