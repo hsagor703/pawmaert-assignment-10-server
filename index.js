@@ -45,19 +45,30 @@ async function run() {
       res.send(result);
     });
 
-    // get for search 
-    app.get('/search', async (req, res) => {
+    // get for search
+    app.get("/search", async (req, res) => {
       const search = req.query.search;
-      const result = await listingCollection.find({category: {$regex: search, $options: 'i'}}).toArray();
-      res.send(result)
-    })
+      const result = await listingCollection
+        .find({ category: { $regex: search, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
+
+    // get for filter
+    app.get("/filter", async (req, res) => {
+      const filter = req.query.filter;
+      const result = await listingCollection
+        .find({ category: { $regex: filter, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
 
     // create a new listing
     app.post("/allListing", async (req, res) => {
       const data = req.body;
       console.log(data);
       const result = await listingCollection.insertOne(data);
-      res.send(result)
+      res.send(result);
     });
 
     await client.db("admin").command({ ping: 1 });
