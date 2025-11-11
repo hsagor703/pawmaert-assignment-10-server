@@ -45,6 +45,13 @@ async function run() {
       res.send(result);
     });
 
+    // get for search 
+    app.get('/search', async (req, res) => {
+      const search = req.query.search;
+      const result = await listingCollection.find({category: {$regex: search, $options: 'i'}}).toArray();
+      res.send(result)
+    })
+
     // create a new listing
     app.post("/allListing", async (req, res) => {
       const data = req.body;
