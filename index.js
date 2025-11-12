@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
-require('dotenv').config()
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -9,8 +9,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const uri =
-  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.a1rdcep.mongodb.net/?appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.a1rdcep.mongodb.net/?appName=Cluster0`;
 
 app.get("/", (req, res) => {
   res.send("pawmart assignment server is running");
@@ -72,11 +71,32 @@ async function run() {
       res.send(result);
     });
 
+    // get find with email from listing
+    app.get("/myListing", async (req, res) => {
+      const email = req.query.email;
+      const result = await listingCollection.find({ email: email }).toArray();
+      res.send(result);
+    });
+
+    app.delete("/allListing/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log("from delete api", id);
+      const query = { _id: new ObjectId(id) };
+      const result = await listingCollection.deleteOne(query);
+      res.send(result);
+    });
 
     // create a new order in orderCollection
     app.post("/orderList", async (req, res) => {
       const data = req.body;
       const result = await orderCollection.insertOne(data);
+      res.send(result);
+    });
+
+    // get find with email
+    app.get("/myOrders", async (req, res) => {
+      const email = req.query.body;
+      const result = await orderCollection.find(email).toArray();
       res.send(result);
     });
 
