@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 // middleware
 app.use(cors());
 app.use(express.json());
-// pawmart-assignment gaPL365fDwpO0ATk
+
 const uri =
   `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.a1rdcep.mongodb.net/?appName=Cluster0`;
 
