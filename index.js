@@ -1,15 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 3000;
 
 // middleware
 app.use(cors());
 app.use(express.json());
-
+// pawmart-assignment gaPL365fDwpO0ATk
 const uri =
-  "mongodb+srv://pawmart-assignment:gaPL365fDwpO0ATk@cluster0.a1rdcep.mongodb.net/?appName=Cluster0";
+  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.a1rdcep.mongodb.net/?appName=Cluster0`;
 
 app.get("/", (req, res) => {
   res.send("pawmart assignment server is running");
@@ -28,6 +29,7 @@ async function run() {
     await client.connect();
     const db = client.db("pawmart-assignment");
     const listingCollection = db.collection("listing");
+    const orderCollection = db.collection("order-info");
 
     // get all listing
     app.get("/allListing", async (req, res) => {
@@ -49,7 +51,7 @@ async function run() {
     app.get("/search", async (req, res) => {
       const search = req.query.search;
       const result = await listingCollection
-        .find({ category: { $regex: search, $options: "i" } })
+        .find({ name: { $regex: search, $options: "i" } })
         .toArray();
       res.send(result);
     });
@@ -66,8 +68,15 @@ async function run() {
     // create a new listing
     app.post("/allListing", async (req, res) => {
       const data = req.body;
-      console.log(data);
       const result = await listingCollection.insertOne(data);
+      res.send(result);
+    });
+
+
+    // create a new order in orderCollection
+    app.post("/orderList", async (req, res) => {
+      const data = req.body;
+      const result = await orderCollection.insertOne(data);
       res.send(result);
     });
 
