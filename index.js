@@ -78,6 +78,20 @@ async function run() {
       res.send(result);
     });
 
+    // update single item
+    app.patch("/myListing/:id", async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      console.log("form server side", id);
+      const query = { _id: new ObjectId(id) };
+      const update = {
+        $set: data,
+      };
+      const result = await listingCollection.updateOne(query, update);
+      res.send(result);
+    });
+
+    // delete single item
     app.delete("/allListing/:id", async (req, res) => {
       const id = req.params.id;
       console.log("from delete api", id);
