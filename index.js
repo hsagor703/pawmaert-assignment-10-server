@@ -41,7 +41,7 @@ async function run() {
       const result = await listingCollection
         .find()
         .sort({ date: -1 })
-        .limit(6)
+        .limit(8)
         .toArray();
       res.send(result);
     });
@@ -114,10 +114,10 @@ async function run() {
       res.send(result);
     });
 
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!"
+    // );
   } finally {
   }
 }

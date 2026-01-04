@@ -1,2 +1,4 @@
 node_modules
 .env
+pawmart-assignment-firebase-adminsdk.json
+.vercel
